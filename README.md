@@ -17,8 +17,11 @@ Use https://www.aireforge.com/tools/sql-server-connection-string-generator to ge
 
 4. Goto http://localhost:8082
 
-Configured routes
-GET  /part
-POST /part 
-GET  /task
-POST /task 
+
+## Routes
+| Method | Route(Params/Body) | Description |
+| --- | --- | --- |
+| GET | `/part?page=<int?>&page_size=<int?>` | Returns the parts index/search page | 
+| GET | `/parts?page=<int?>&page_size=<int?>` | Returns the parts as json | 
+| GET | `/api/<itemtype_name>` | Returns the items of the `itemtype_name` | 
+| GET | `/api/<itemtype_name>/<item_id>` | Return the specified item | 
