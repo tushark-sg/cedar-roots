@@ -15,38 +15,38 @@ import com.todo.app.repository.TaskRepository;
 @Service
 public class TaskServiceImpl implements TaskService {
 
-  @Autowired
-  private TaskRepository taskRepository;
+	@Autowired
+	private TaskRepository taskRepository;
 
-  @Override
-  public void addTask(Task task) {
-    taskRepository.save(task);
-  }
+	@Override
+	public void addTask(Task task) {
+		taskRepository.save(task);
+	}
 
-  @Override
-  public void deleteTaskById(Long id) {
-    taskRepository.deleteById(id);
-  }
+	@Override
+	public void deleteTaskById(Long id) {
+		taskRepository.deleteById(id);
+	}
 
-  @Override
-  public void updateTaskById(Long id, Task task) {
-    taskRepository.save(task);
-  }
+	@Override
+	public void updateTaskById(Long id, Task task) {
+		taskRepository.save(task);
+	}
 
-  @Override
-  public List<Task> getAllTasks() {
-    return taskRepository.findAll();
-  }
+	@Override
+	public List<Task> getAllTasks() {
+		return taskRepository.findAll();
+	}
 
-  @Override
-  public void deleteTask(Long taskId) {
-    taskRepository.deleteById(taskId);
-  }
+	@Override
+	public void deleteTask(Long taskId) {
+		taskRepository.deleteById(taskId);
+	}
 
-  @Override
-  public Page<Task> getAllTasksPage(int pageNo, int pageSize) {
-    Pageable pageable = PageRequest.of(pageNo - 1, pageSize);
-    return taskRepository.findAll(pageable);
-  }
+	@Override
+	public Page<Task> getAllTasksPage(int pageNo, int pageSize) {
+		Pageable pageable = PageRequest.of(pageNo - 1, pageSize);
+		return taskRepository.findAll(pageable);
+	}
 
 }
