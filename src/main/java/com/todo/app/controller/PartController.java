@@ -34,9 +34,16 @@ public class PartController {
 	 * @description Parts view for the part controller
 	 */
 	@GetMapping("/part")
-	public ModelAndView partsIndex() {
+	public ModelAndView partIndex(@RequestParam(name = "page", required = false) Integer page,
+			@RequestParam(name = "page_size", required = false) Integer page_size) {
+		List<Part> parts;
+		if (page != null && page_size != null) {
+			parts = partService.getAllPartsPage(page, page_size).getContent();
+		} else {
+			parts = partService.getAllParts();
+		}
 		ModelAndView modelAndView = new ModelAndView("part");
-		modelAndView.addObject("message", "Baeldung");
+		modelAndView.addObject("parts", parts);
 		return modelAndView;
 	}
 
