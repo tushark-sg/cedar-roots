@@ -7,13 +7,17 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.todo.app.entity.CommandBarMenu;
 import com.todo.app.service.CommandBarMenuButtonService;
+import com.todo.app.service.CommandBarMenuService;
 
 @RestController
 public class ItemRestController {
 
 	@Autowired
 	CommandBarMenuButtonService menuButtonService;
+	@Autowired
+	CommandBarMenuService menuService;
 	
 
 	/*
@@ -24,10 +28,17 @@ public class ItemRestController {
 		if (item_type_name.toLowerCase().equals("commandbarmenubutton")) {
 			return menuButtonService.getAllCommandBarMenuButtons();
 		}
+		
+		else if (item_type_name.toLowerCase().equals("commandbarmenu")) {
+			return menuService.getAllCommandBarMenu();
+		}
+		
 		List<String> res = new ArrayList<>();
 		res.add("Error");
 		return res;
 	}
+	
+	
 	// @GetMapping("/books")
 	// public String test_mapping() {
 	// return "books";
