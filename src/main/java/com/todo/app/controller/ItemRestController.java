@@ -23,10 +23,11 @@ public class ItemRestController {
 	/*
 	 * @description Need to add more mappings for each itemtype, ignores item_id for now
 	 */
+	
 	@GetMapping("/api/{item_type_name}/{item_id}")
 	public List getItemForItemType(@PathVariable String item_type_name, @PathVariable String item_id) {
 		if (item_type_name.toLowerCase().equals("commandbarmenubutton")) {
-			return menuButtonService.getAllCommandBarMenuButtons();
+			return menuButtonService.getDistinctCommandBarMenuButtonsByLabel();
 		}
 		
 		else if (item_type_name.toLowerCase().equals("commandbarmenu")) {

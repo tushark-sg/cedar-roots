@@ -2,84 +2,76 @@ package com.todo.app.entity;
 
 import javax.persistence.Id;
 import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
-// import javax.persistence.GeneratedValue;
-// import javax.persistence.GenerationType;
 
 @Entity
 @Table(name = "commandbarmenubutton", schema = "innovator")
 public class CommandBarMenuButton {
 
-	@Id
-	@Column(name = "id", length = 32, nullable = false)
-	private String id;
+    @Id
+    @Column(name = "id", length = 32, nullable = false)
+    private String id;
 
-	private String label;
+    @Column(name = "label")
+    private String label;
 
-	public String getLabel() {
-		return label;
-	}
+    @Column(name = "parent_menu")
+    @JsonProperty("parent_menu")
+    private String parent_menu;
 
-	public void setLabel(String label) {
-		this.label = label;
-	}
+    @Column(name = "additional_data")
+    private String additionalData;
 
-	private String parent_menu;
+    @Column(name = "image")
+    private String image;
 
-	private String additional_data;
+    public CommandBarMenuButton() {}
 
-	private String image;
+    public CommandBarMenuButton(String id) {
+        this.id = id;
+    }
 
-	public String getImage() {
-		return image;
-	}
+    public String getId() {
+        return id;
+    }
 
-	public void setImage(String image) {
-		this.image = image;
-	}
+    public void setId(String id) {
+        this.id = id;
+    }
 
-	public CommandBarMenuButton() {
-	}
+    public String getLabel() {
+        return label;
+    }
 
-	public CommandBarMenuButton(String id) {
-		this.id = id;
-	}
+    public void setLabel(String label) {
+        this.label = label;
+    }
 
-	public String getId() {
-		return id;
-	}
+    public String getImage() {
+        return image;
+    }
 
-	public void setId(String id) {
-		this.id = id;
-	}
+    public void setImage(String image) {
+        this.image = image;
+    }
 
-	/**
-	 * @return the additional_data
-	 */
-	public String getAdditional_data() {
-		return additional_data;
-	}
+    public String getParentMenu() {
+        return parent_menu;
+    }
 
-	/**
-	 * @param additional_data the additional_data to set
-	 */
-	public void setAdditional_data(String additional_data) {
-		this.additional_data = additional_data;
-	}
+    public void setParentMenu(String parentMenu) {
+        this.parent_menu = parentMenu;
+    }
 
-	/**
-	 * @return the parent_menu
-	 */
-	public String getParent_menu() {
-		return parent_menu;
-	}
+    public String getAdditionalData() {
+        return additionalData;
+    }
 
-	/**
-	 * @param parent_menu the parent_menu to set
-	 */
-	public void setParent_menu(String parent_menu) {
-		this.parent_menu = parent_menu;
-	}
-
+    public void setAdditionalData(String additionalData) {
+        this.additionalData = additionalData;
+    }
 }

@@ -34,6 +34,8 @@ public class TaskController {
 	public String viewIndexPage() {
 		return "redirect:/home";
 	}
+	
+	
 
 	@GetMapping("/home")
 	public String viewHome(Model model) {

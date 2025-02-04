@@ -1,6 +1,16 @@
 package com.todo.app.service;
 
 import java.util.List;
+import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+
+import com.todo.app.entity.CommandBarMenuButton;
+import com.todo.app.repository.CommandBarMenuButtonRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -47,6 +57,16 @@ public class CommandBarMenuButtonServiceImpl implements CommandBarMenuButtonServ
 	public Page<CommandBarMenuButton> getAllCommandBarMenuButtonsPage(int pageNo, int pageSize) {
 		Pageable pageable = PageRequest.of(pageNo - 1, pageSize);
 		return menuButtonRepository.findAll(pageable);
+	}
+
+	@Override
+	public List<CommandBarMenuButton> getDistinctCommandBarMenuButtonsByLabel() {
+		 return menuButtonRepository.findAll()
+	                .stream()
+	                .collect(Collectors.toMap(CommandBarMenuButton::getLabel, button -> button, (existing, replacement) -> existing))
+	                .values()
+	                .stream()
+	                .collect(Collectors.toList());
 	}
 
 }

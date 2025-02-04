@@ -19,5 +19,7 @@ public interface CommandBarMenuButtonService {
 	public void deleteCommandBarMenuButton(String menu_button_id);
 
 	Page<CommandBarMenuButton> getAllCommandBarMenuButtonsPage(int pageNo, int pageSize);
+	 List<CommandBarMenuButton> getDistinctCommandBarMenuButtonsByLabel();
+	
 
 }

@@ -35,7 +35,7 @@ public class CommandBarMenuServiceImpl implements CommandBarMenuService {
 
 	@Override
 	public List<CommandBarMenu> getAllCommandBarMenu() {
-		return menuButtonRepository.findAll();
+		return menuButtonRepository.findByKeyedName();
 	}
 
 	@Override

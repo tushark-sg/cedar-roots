@@ -40,24 +40,30 @@
         .main-content {
             display: flex;
             flex-grow: 1;
-            overflow-y: auto;
+            
         }
 
-        /* Sidebar */
-        .sidebar {
-            width: 200px;
-            background-color: #2c3e50; /* Dark Blue */
-            color: white;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            transition: transform 0.3s ease, opacity 0.3s ease;
-            visibility: visible; /* Default visibility */
-            opacity: 1; /* Sidebar is fully visible */
-            overflow-y: auto; /* Allow scrolling */
-            height: 100vh; /* Ensure sidebar takes full height */
-        }
+      /* Sidebar should have its own scrollbar */
+.sidebar {
+    width: 200px;
+    background-color: #2c3e50;
+    color: white;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    height: 100vh; /* Full height */
+    overflow-y: auto; /* Scrollbar for sidebar */
+}
+
+/* Ensure content area scrolls independently */
+.content-area {
+    flex-grow: 1;
+    padding: 20px;
+    height: 100vh; /* Full height */
+    overflow-y: auto; /* Scroll only within content area */
+}
+
 
         .sidebar a {
             color: #ecf0f1;
@@ -170,6 +176,33 @@
             background-color: #007BFF;
             border-radius: 50%;
         }
+        .sidebar ul {
+            list-style: none;
+        }
+        .sidebar ul li {
+            padding: 10px;
+            cursor: pointer;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            position: relative;
+        }
+        .sidebar ul li:hover {
+            background-color: #34495e;
+        }
+        .submenu {
+            display: none;
+            padding-left: 15px;
+        }
+        
+        .expand-icon {
+            position: absolute;
+            right: 10px;
+            cursor: pointer;
+        }
+        
+        .expanded > .submenu {
+            display: block;
+        }
+       
     </style>
 </head>
 
@@ -202,90 +235,324 @@
         </div>
     </div>
 
-    <script>
- // Store the fetched data
- // Store the fetched data
-let apiData = [];
+  <script>
 
-// Function to fetch the data from the API
-async function fetchData() {
+  let validChildIds = new Set(); // Store valid child IDs from the sidebar
+  let menuTree = [];
+
+//Function to fetch the sidebar items from the API and populate them
+async function fetchSidebarItems() {
+   try {
+       console.log("Fetching sidebar data...");
+
+       const response = await fetch('/api/commandbarmenubutton/someItemId');
+       const firstJson = await response.json();
+       console.log("commandbarmenubutton Data:", firstJson);
+
+       const response1 = await fetch('/api/commandbarmenu/someItemId');
+       const secondJson = await response1.json();
+       console.log("commandbarmenu Data:", secondJson);
+
+       if (!firstJson.length && !secondJson.length) {
+           console.error("No sidebar data received!");
+           return;
+       }
+
+       menuTree = buildTree(secondJson, firstJson);
+       console.log("Generated menu tree:", menuTree);
+
+       // Extract valid child IDs
+       extractValidChildIds(menuTree);
+
+       // Call fetchItems after sidebar is ready
+       fetchItems();
+
+       const menuContainer = document.getElementById("sidebar");
+       menuContainer.innerHTML = "";
+       generateMenu(menuTree, menuContainer);
+   } catch (error) {
+       console.error("Error fetching sidebar items:", error);
+   }
+}
+function mapJsonById(json1, json2) {
+    // Convert json2 into a Set for quick lookup
+    const idSet = new Set(json2.map(item => item.id));
+    
+    // Filter json1 to keep only those elements whose id exists in json2
+    const matchedData = json1.filter(item => idSet.has(item.id));
+    
+    return matchedData;
+}
+function getExtremeChildNodes(jsonData) {
+    let extremeChildren = [];
+    
+    function traverse(node) {
+        if (!node.children || node.children.length === 0) {
+            extremeChildren.push({
+                "id": node.id,
+                "name": node.label,               
+            });
+        } else {
+            node.children.forEach(child => traverse(child));
+        }
+    }
+    
+    jsonData.forEach(node => traverse(node));
+    
+    console.log("extremeChildren", extremeChildren);
+    
+    return extremeChildren;
+}
+  
+  
+//Function to extract valid child IDs from the tree
+function extractValidChildIds(tree) {
+   tree.forEach(parent => {
+       parent.children.forEach(child => {
+           validChildIds.add(child.id); // Store the child's ID
+           if (child.children.length > 0) {
+               extractValidChildIds([child]); // Recursive call for deeper levels
+           }
+       });
+   });
+}
+
+async function fetchItems() {
     try {
         const response = await fetch('/api/commandbarmenubutton/someItemId');
-        apiData = await response.json(); // Store the data globally
+        const data = await response.json();
 
-        // Once data is fetched, call the functions to render sidebar and grid
-        renderSidebarItems(apiData);
-        renderGridItems(apiData);
+        const gridContainer = document.getElementById('grid-container');
+        gridContainer.innerHTML = ''; // Clear existing content
+
+   
+
+        // Filter items that are valid children in the sidebar
+        // const filteredData = data.filter(item => validChildIds.has(item.id));
+        let filteredData = getExtremeChildNodes(menuTree);
+		filteredData = mapJsonById(data, filteredData);
+		console.log("filteredData", filteredData);
+        
+        // Loop through filtered data and create grid items (only if not already added)
+        let counter = 0;
+        filteredData.forEach(item => {
+        		
+                const gridWrapper = document.createElement('div'); // Wrapper for item and label
+                gridWrapper.style.textAlign = 'center'; // Center alignment
+
+                const gridItem = document.createElement('div');
+                gridItem.classList.add('grid-item');
+
+                const link = document.createElement('a');
+               
+                    console.log("counter", counter++);
+                    
+                    if(item.additionalData) {
+                    	console.log("counter-in", counter);
+	                    let jsonObject = JSON.parse(item.additionalData);
+	                    let itemTypeId = jsonObject.itemTypeId;
+	
+	                    // Store the base path from JSP safely
+	                    let basePath = "<%= request.getContextPath() %>";
+	
+	                    // Make an API call to get the table name dynamically
+	                    fetch(basePath + "/getTableNameByItemtypeId?itemtypeId=" + encodeURIComponent(itemTypeId))
+	                        .then(response => response.text())  // Expecting plain text response
+	                        .then(tableName => {
+	                        	
+	                        	debugger;
+	                        	console.log("tableName", tableName);
+	                            // Ensure proper encoding in JavaScript
+	                            let encodedTableName = encodeURIComponent(tableName.trim().replace(/\s+/g, "_"));
+	
+	                            // Set the href dynamically
+	                            link.href = basePath + "/displayTable?tableName=" + encodedTableName;
+	                        })
+	                        .catch(error => {
+	                            console.error("Error fetching table name:", error);
+	                            link.href = "#"; // Fallback if there's an error
+	                        });
+                    }
+                
+
+
+                
+
+
+                let imageName = 'DefaultItemType.svg'; // Default image fallback
+                if (item.image) {
+                    imageName = item.image.split('/').pop(); // Extract last part after '/'
+                }
+
+                const img = document.createElement('img');
+                img.src = "/Image/" + imageName;
+                img.alt = item.label + " Icon";
+                img.style.width = '50px';
+                img.style.display = 'block';
+                img.style.margin = '0 auto';
+
+                link.appendChild(img);
+                gridItem.appendChild(link);
+
+                const iconText = document.createElement('div');
+                iconText.classList.add('icon-text');
+                iconText.textContent = item.label;
+                iconText.style.marginTop = '5px';
+
+                gridWrapper.appendChild(gridItem);
+                gridWrapper.appendChild(iconText);
+                gridContainer.appendChild(gridWrapper);
+            
+        });
+
     } catch (error) {
         console.error("Error fetching data:", error);
     }
 }
 
-// Function to render the sidebar items
-function renderSidebarItems(data) {
-    const sidebar = document.getElementById('sidebar');
-    sidebar.innerHTML = ''; // Clear any existing sidebar items
+function hyperlinkGenerator() {
+	const link = document.createElement('a');
+	
+    let basePath = "<%= request.getContextPath() %>";
+}
 
-    // Loop through the data and create sidebar links
-    data.forEach(item => {
-        // Skip items where image is null
-        if (item.image === null) {
-            return;
+
+//Function to build a tree from parent and child elements (sorted alphabetically)
+function buildTree(parents, children) {
+   let lookup = {};
+   let tree = [];
+
+   // Initialize lookup table for parents
+   parents.forEach(item => {
+       lookup[item.id] = { 
+           id: item.id, 
+           label: item.keyedName || item.label, 
+           additionalData: item.additionalData,
+           children: [] 
+       };
+   });
+
+   // Organize parents into a tree structure
+   parents.forEach(item => {
+       if (item.parent_menu !== null && lookup[item.parent_menu]) {
+           lookup[item.parent_menu].children.push(lookup[item.id]);
+       } else {
+           tree.push(lookup[item.id]);
+       }
+   });
+
+   // Attach children to their respective parent nodes
+   children.forEach(item => {
+       if (item.parent_menu !== null && lookup[item.parent_menu]) {
+           lookup[item.parent_menu].children.push({ 
+               id: item.id, 
+               label: item.keyedName || item.label, 
+               additionalData: item.additionalData,
+               children: [] 
+           });
+       }
+   });
+
+   // Remove parent menus that don't have children
+   tree = tree.filter(parent => parent.children.length > 0);
+
+   // Sort the tree alphabetically
+   function sortTree(nodeArray) {
+       nodeArray.sort((a, b) => a.label.localeCompare(b.label));
+       nodeArray.forEach(node => {
+           if (node.children.length > 0) {
+               sortTree(node.children);
+           }
+       });
+   }
+   sortTree(tree);
+
+   return tree;
+}
+
+
+function generateMenu(tree, parentElement) {
+    let ul = document.createElement("ul");
+    parentElement.appendChild(ul);
+
+    tree.forEach(item => {
+        let li = document.createElement("li");
+        li.style.listStyleType = "none"; // Remove dots for parent menus
+
+        const link = document.createElement("a");
+        link.textContent = item.label;
+        link.href = "#"; // Default href to prevent broken links
+
+        if (item.additionalData) {
+            try {
+                let jsonObject = JSON.parse(item.additionalData);
+                let itemTypeId = jsonObject.itemTypeId;
+
+                // Store the base path from JSP safely
+                let basePath = "<%= request.getContextPath() %>";
+
+                // Make an API call to get the table name dynamically
+                fetch(basePath + "/getTableNameByItemtypeId?itemtypeId=" + encodeURIComponent(itemTypeId))
+                    .then(response => response.text()) // Expecting plain text response
+                    .then(tableName => {
+                        console.log("Fetched Table Name:", tableName);
+                        
+                        let encodedTableName = encodeURIComponent(tableName.trim().replace(/\s+/g, "_"));
+                        link.href = basePath + "/displayTable?tableName=" + encodedTableName;
+                    })
+                    .catch(error => {
+                        console.error("Error fetching table name:", error);
+                    });
+            } catch (err) {
+                console.error("Invalid JSON in additionalData:", err);
+            }
         }
-        
-        const sidebarLink = document.createElement('a');
-        sidebarLink.href = '#'; // You can modify this if you have URLs for each item
-        sidebarLink.textContent = item.label; // Set the label from the API as link text
-        sidebar.appendChild(sidebarLink);
+
+        li.appendChild(link); // Append the link inside the li
+
+        if (item.children && item.children.length > 0) {
+            let expandIcon = document.createElement("span");
+            expandIcon.textContent = "+";
+            expandIcon.classList.add("expand-icon");
+            li.prepend(expandIcon);
+
+            let submenu = document.createElement("ul");
+            submenu.classList.add("submenu");
+            generateMenu(item.children, submenu);
+            li.appendChild(submenu);
+
+            // Toggle expand/collapse behavior
+            li.addEventListener("click", function (e) {
+                e.stopPropagation();
+                li.classList.toggle("expanded");
+                expandIcon.textContent = li.classList.contains("expanded") ? "−" : "+";
+            });
+        }
+
+        ul.appendChild(li); // Append li to ul
     });
 }
 
-// Function to render the grid items (filtered by additional_data containing tocAccessId and non-null image)
-function renderGridItems(data) {
-    const gridContainer = document.getElementById('grid-container');
-    gridContainer.innerHTML = ''; // Clear any existing content
 
-    // Filter the data for items where additional_data is not null, contains 'tocAccessId' and image is not null
-    const filteredData = data.filter(item => {
-        return item.additional_data && item.additional_data.includes('tocAccessId') && item.image !== null;
-    });
+//Function to toggle sidebar visibility
+function toggleSidebar() {
+   const sidebar = document.getElementById('sidebar');
+   sidebar.classList.toggle('unpinned');
 
-    // Loop through the filtered data and create grid items
-    filteredData.forEach(item => {
-        const gridItem = document.createElement('div');
-        gridItem.classList.add('grid-item');
-        
-        const iconText = document.createElement('div');
-        iconText.classList.add('icon-text');
-        iconText.textContent = item.label; // Display the label of the item
-        
-        gridItem.appendChild(iconText);
-        gridContainer.appendChild(gridItem);
-    });
+   // Toggle visibility and opacity for a smooth transition
+   if (sidebar.classList.contains('unpinned')) {
+       sidebar.style.display = 'none'; // Hide sidebar
+   } else {
+       sidebar.style.display = 'block'; // Show sidebar
+   }
 }
 
-// Call the fetch function when the page loads
+//Call fetchSidebarItems first, then fetchItems
 window.onload = function () {
-    fetchData(); // Fetch data once and use it for both the sidebar and grid
+   fetchSidebarItems(); // Fetch sidebar items
 };
 
-// Function to toggle sidebar visibility
-const sidebar = document.getElementById('sidebar');
+</script>
 
-function toggleSidebar() {
-    sidebar.classList.toggle('unpinned');
-    
-    // Toggle visibility and opacity for smooth transition
-    if (sidebar.classList.contains('unpinned')) {
-        sidebar.style.visibility = 'hidden'; // Hide sidebar
-        sidebar.style.opacity = '0'; // Make sidebar transparent
-    } else {
-        sidebar.style.visibility = 'visible'; // Show sidebar
-        sidebar.style.opacity = '1'; // Make sidebar fully opaque
-    }
-}
-
-
-    </script>
 </body>
 </html>
