@@ -1,23 +1,17 @@
 package com.todo.app.service;
 
-import java.util.List;
-
+import com.todo.app.entity.CommandBarMenuButton;
 import org.springframework.data.domain.Page;
 
-import com.todo.app.entity.CommandBarMenuButton;
+import java.util.List;
 
 public interface CommandBarMenuButtonService {
 
-	public void addCommandBarMenuButton(CommandBarMenuButton menu_button);
 
-	public void deleteCommandBarMenuButtonById(String id);
+    List<CommandBarMenuButton> getAllCommandBarMenuButtons();
 
-	public void updateCommandBarMenuButtonById(String id, CommandBarMenuButton menu_button);
+    List<CommandBarMenuButton> getAllTOCButtons();
 
-	public List<CommandBarMenuButton> getAllCommandBarMenuButtons();
-
-	public void deleteCommandBarMenuButton(String menu_button_id);
-
-	Page<CommandBarMenuButton> getAllCommandBarMenuButtonsPage(int pageNo, int pageSize);
+    Page<CommandBarMenuButton> getAllCommandBarMenuButtonsPage(int pageNo, int pageSize);
 
 }
