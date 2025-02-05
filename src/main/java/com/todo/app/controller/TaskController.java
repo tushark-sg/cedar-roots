@@ -22,11 +22,11 @@ public class TaskController {
     // public String viewErrorPage() {
     // return "error";
     // }
-
-    @GetMapping("/")
-    public String viewIndexPage() {
-        return "redirect:/home";
-    }
+//
+//    @GetMapping("/")
+//    public String viewIndexPage() {
+//        return "redirect:/home";
+//    }
 
     @GetMapping("/home")
     public String viewHome(Model model) {
