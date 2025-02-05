@@ -45,11 +45,19 @@
 
 
 		<dependency>
+			<!-- dev tools dependency, can be removed -->
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-devtools</artifactId>
 			<optional>true</optional>
 		</dependency>
 
+		<dependency>
+
+			<!-- dev time dependency, can be removed -->
+     <groupId>org.springdoc</groupId>
+     <artifactId>springdoc-openapi-ui</artifactId>
+     <version>1.7.0</version>
+</dependency>
 
 	</dependencies>
 	<build>
