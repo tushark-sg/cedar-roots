@@ -23,18 +23,7 @@ public class TaskController {
     // return "error";
     // }
 
-    @GetMapping("/")
-    public String viewIndexPage() {
-        return "redirect:/home";
-    }
 
-    @GetMapping("/home")
-    public String viewHome(Model model) {
-        model.addAttribute("task", new Task());
-        System.out.println(
-                "asldkfjlasdkfjalsdkfjasdlfkjasldfjasldkfjasdklfjaldskfjaldkfjalsdkfjakldjfalkdjfalkdsjfalksdfjalkdsfja;lkdsjfalkjdsflkadsjlfka;df");
-        return "home";
-    }
 
     @GetMapping("/task")
     public String viewTask(Model model) {
