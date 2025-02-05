@@ -12,18 +12,18 @@ import javax.persistence.Table;
 public class User {
 
     @Column(name = "login_name")
-    public String loginName;
+    private String loginName;
 
     @Column(length = 32)
-    public String password;
+    private String password;
 
     @Column(name = "first_name")
-    public String firstName;
+    private String firstName;
 
 
     @Id
     @Column(name = "id", length = 32)
-    public String id;
+    private String id;
 
     public User() {
     }
@@ -34,4 +34,35 @@ public class User {
         this.id = id;
     }
 
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getLoginName() {
+        return loginName;
+    }
+
+    public void setLoginName(String loginName) {
+        this.loginName = loginName;
+    }
 }

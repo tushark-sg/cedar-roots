@@ -28,20 +28,20 @@ public class LoginController {
     )
     public RedirectView login_user(@RequestParam Map<String, String> params) {
         User user = new User();
-        user.loginName = params.get("login_name");
-        user.password = params.get("password");
+        user.setLoginName( params.get("login_name"));
+        user.setPassword(params.get("password"));
         assert user != null;
-        assert !user.loginName.isEmpty();
-        List<User> users = userService.getMyUser(user.loginName);
+        assert !user.getLoginName().isEmpty();
+        List<User> users = userService.getMyUser(user.getLoginName());
         if (users.size() <= 0) {
             logger.warn("No user with given login_name found");
             return new RedirectView("login", false);
         }
 
-        byte[] byte_password = user.password.getBytes();
+        byte[] byte_password = user.getPassword().getBytes();
         try {
             MessageDigest md = MessageDigest.getInstance("MD5");
-            if(DatatypeConverter.printHexBinary( md.digest(byte_password)).toUpperCase().equals(users.get(0).password.toUpperCase())){
+            if(DatatypeConverter.printHexBinary( md.digest(byte_password)).toUpperCase().equals(users.get(0).getPassword().toUpperCase())){
                 logger.info("User found redirecting");
                 return new RedirectView("/home",false);
             }

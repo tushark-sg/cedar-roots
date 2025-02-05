@@ -11,16 +11,16 @@ public class Part {
 
     @Id
     @Column(name = "id", length = 32, nullable = false)
-    public String id;
+    private String id;
 
     @Column(name = "item_number")
-    public String itemNumber;
+    private String itemNumber;
 
     @Column(name = "make_buy")
-    public String makeBuy;
+    private String makeBuy;
 
     @Column(name = "name")
-    public String name;
+    private String name;
 
     // Constructors
     public Part() {

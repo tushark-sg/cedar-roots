@@ -18,7 +18,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<User> getMyUser(String loginName) {
         User user = new User();
-        user.loginName = loginName;
+        user.setLoginName(loginName);
         return userRepository.findAll(Example.of(user), Sort.unsorted());
     }
 

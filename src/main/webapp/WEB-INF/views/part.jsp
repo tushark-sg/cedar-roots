@@ -1,18 +1,14 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="t" tagdir="/WEB-INF/tags/" %>
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Parts List</title>
+
+<t:master>
     <style>
         body {
             font-family: Arial, sans-serif;
             background-color: #f4f4f4;
             margin: 0;
-            padding: 20px;
             text-align: center;
         }
 
@@ -154,9 +150,6 @@
             }
         }
     </style>
-</head>
-<body>
-
 <h1>Parts</h1>
 
 <!-- Search Box -->
@@ -276,6 +269,4 @@
         }
     }
 </script>
-
-</body>
-</html>
+</t:master>
