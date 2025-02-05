@@ -24,7 +24,6 @@ public class TaskController {
     // }
 
 
-
     @GetMapping("/task")
     public String viewTask(Model model) {
         model.addAttribute("task", new Task(3L, "sasdfadf", "sdf", LocalDate.now()));
