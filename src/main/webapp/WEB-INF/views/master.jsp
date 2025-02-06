@@ -1,4 +1,8 @@
-<!DOCTYPE html>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@taglib prefix="t" tagdir="/WEB-INF/tags" %>
+
+<t:master>
 <script src="js/vanilla-js-tabs.js"></script>
 <link rel="stylesheet" href="css/vanilla-js-tabs.css">
 
@@ -14,7 +18,7 @@
 <script>
     const tab_data = [
         {label: "Search - Parts", endpoint: "/part"},
-        {label: "Part - mx-400", endpoint: "/parts"},
+        {label: "Part - mx-400", endpoint: "/"},
         {label: "Home", endpoint: "/home"},
 
     ];
@@ -46,3 +50,4 @@
     )
 
 </script>
+</t:master>

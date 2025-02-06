@@ -207,7 +207,7 @@
         </div>
 
         <!-- Content Area -->
-        <div class="content-area" style="flex-grow: 1; padding: 20px;">
+        <div class="content-area" style="flex-grow: 1; ">
                 <jsp:doBody></jsp:doBody>
         </div>
             <!-- Icons Grid -->

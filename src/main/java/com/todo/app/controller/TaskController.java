@@ -4,10 +4,10 @@ import com.todo.app.entity.Task;
 import com.todo.app.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -72,20 +72,20 @@ public class TaskController {
     }
 
     // Create task using AJAX request
-    @PostMapping("/home")
-    @ResponseBody
-    public ResponseEntity<List<Task>> createTask(@RequestBody Task task) {
-        System.out.println("post /home task");
-        taskService.addTask(task);
-        List<Task> tasks = taskService.getAllTasks();
-        return ResponseEntity.ok(tasks);
-    }
-
-    // Delete task using AJAX request
-    @DeleteMapping("/home/{taskId}")
-    public ResponseEntity<Void> deleteTask(@PathVariable Long taskId) {
-        taskService.deleteTask(taskId);
-        return ResponseEntity.ok().build();
-    }
+//    @PostMapping("/home")
+//    @ResponseBody
+//    public ResponseEntity<List<Task>> createTask(@RequestBody Task task) {
+//        System.out.println("post /home task");
+//        taskService.addTask(task);
+//        List<Task> tasks = taskService.getAllTasks();
+//        return ResponseEntity.ok(tasks);
+//    }
+//
+//    // Delete task using AJAX request
+//    @DeleteMapping("/home/{taskId}")
+//    public ResponseEntity<Void> deleteTask(@PathVariable Long taskId) {
+//        taskService.deleteTask(taskId);
+//        return ResponseEntity.ok().build();
+//    }
 
 }
