@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.view.RedirectView;
 
 import java.util.List;
 
@@ -41,17 +42,22 @@ public class PartController {
     /**
      * @description Parts get api for part controller
      */
-    @GetMapping("/parts")
-    public List getParts(@RequestParam(name = "page", required = false) Integer page,
-                         @RequestParam(name = "page_size", required = false) Integer page_size) {
-        List<Part> parts;
-        if (page != null && page_size != null) {
-            parts = partService.getAllPartsPage(page, page_size).getContent();
-        } else {
-            parts = partService.getAllParts();
-        }
+//    @GetMapping("/parts")
+//    public List getParts(@RequestParam(name = "page", required = false) Integer page,
+//                         @RequestParam(name = "page_size", required = false) Integer page_size) {
+//        List<Part> parts;
+//        if (page != null && page_size != null) {
+//            parts = partService.getAllPartsPage(page, page_size).getContent();
+//        } else {
+//            parts = partService.getAllParts();
+//        }
+//
+//        return parts;
+//    }
 
-        return parts;
+    @GetMapping("/parts")
+    public ModelAndView getPartSearch( ){
+        return new ModelAndView("parts");
     }
 
     // @GetMapping("/part/{pageNo}")
