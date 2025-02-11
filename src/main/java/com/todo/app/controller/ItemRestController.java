@@ -3,13 +3,17 @@ package com.todo.app.controller;
 import java.util.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.todo.app.entity.CommandBarMenu;
 import com.todo.app.service.CommandBarMenuButtonService;
 import com.todo.app.service.CommandBarMenuService;
+import com.todo.app.service.PermissionService;
 
 @RestController
 public class ItemRestController {
@@ -19,6 +23,8 @@ public class ItemRestController {
 	@Autowired
 	CommandBarMenuService menuService;
 	
+	 @Autowired
+	    private PermissionService permissionService;
 
 	/*
 	 * @description Need to add more mappings for each itemtype, ignores item_id for now
@@ -38,6 +44,19 @@ public class ItemRestController {
 		res.add("Error");
 		return res;
 	}
+	
+	  @GetMapping("/api/permissions/check")
+	    public ResponseEntity<Boolean> hasPermission(@RequestParam String userId, @RequestParam String permissionId) {
+	        try {
+	        	System.out.println("userID" + userId);
+	        	System.out.println(permissionId);
+	            boolean result = permissionService.hasPermission(userId, permissionId);
+	            System.out.println("result" + result);
+	            return ResponseEntity.ok(result);
+	        } catch (Exception e) {
+	            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(false);
+	        }
+	    }
 	
 	
 	// @GetMapping("/books")

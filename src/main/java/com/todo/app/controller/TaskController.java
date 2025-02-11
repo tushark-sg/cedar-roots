@@ -32,7 +32,7 @@ public class TaskController {
 
 	@GetMapping("/")
 	public String viewIndexPage() {
-		return "redirect:/home";
+		return "redirect:/login";
 	}
 	
 	

@@ -3,7 +3,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <html>
 <head>
-    <title>Dynamic Table Display</title>
+    <title>Aras Innovator</title>
     <style>
         /* Global Styles */
         * {
@@ -130,26 +130,33 @@
     </div>
 
     <div class="overflow-scroll">
-        <c:if test="${not empty tableData}">
-            <table id="dataTable">
-                <tr>
-                    <c:forEach var="column" items="${tableData[0].keySet()}">
-                        <th class="sortable" onclick="sortTable(this)">${column}</th>
-                    </c:forEach>
-                </tr>
-                <c:forEach var="row" items="${tableData}">
-                    <tr>
-                        <c:forEach var="column" items="${row.keySet()}">
-                            <td>${row[column]}</td>
-                        </c:forEach>
-                    </tr>
-                </c:forEach>
-            </table>
-        </c:if>
+       <c:if test="${not empty error}">
+    <div style="color: red; font-weight: bold; margin-bottom: 10px;">
+        ${error}
+    </div>
+</c:if>
 
-        <c:if test="${empty tableData}">
-            <p>No data found for this table.</p>
-        </c:if>
+<c:if test="${not empty tableData}">
+    <table id="dataTable">
+        <tr>
+            <c:forEach var="column" items="${tableData[0].keySet()}">
+                <th class="sortable" onclick="sortTable(this)">${column}</th>
+            </c:forEach>
+        </tr>
+        <c:forEach var="row" items="${tableData}">
+            <tr>
+                <c:forEach var="column" items="${row.keySet()}">
+                    <td>${row[column]}</td>
+                </c:forEach>
+            </tr>
+        </c:forEach>
+    </table>
+</c:if>
+
+<c:if test="${empty tableData and empty error}">
+    <p>No data found for this table.</p>
+</c:if>
+
     </div>
 
     <script>
